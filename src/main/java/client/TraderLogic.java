@@ -3,18 +3,12 @@ package client;
 import java.util.List;
 import java.util.Map;
 
-class GameClient {
+class TraderLogic {
 
     private final String name;
-    private GameConnectionService gameConnectionService;
 
-    GameClient(String name, GameConnectionService gameConnectionService) {
+    TraderLogic(String name) {
         this.name = name;
-        this.gameConnectionService = gameConnectionService;
-    }
-
-    String joinGame() {
-        return "ok";
     }
 
     boolean cornerMarket(Map<String, Integer> hand) {
@@ -63,9 +57,5 @@ class GameClient {
             }
         }
         return null;
-    }
-
-    GameConnectionService getGameConnectionService() {
-        return gameConnectionService;
     }
 }

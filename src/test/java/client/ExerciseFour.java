@@ -2,7 +2,6 @@ package client;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,18 +13,16 @@ import static org.junit.Assert.assertEquals;
 public class ExerciseFour {
     // Test bid logic
 
-    private GameConnectionService gameConnectionService;
-    private GameClient testObject;
+    private TraderLogic testObject;
 
     @Before
     public void setUp() {
-        gameConnectionService = Mockito.mock(GameConnectionService.class);
-        testObject = new GameClient("Will", gameConnectionService);
+        testObject = new TraderLogic("Will");
     }
 
     @Test
     public void shouldBid4ForLuke() {
-        // the GameClient should look at the List of Offers
+        // the TraderLogic should look at the List of Offers
         // and select a player offering the same number as your Target Amount
 
         // This is your hand, you want to give Luke your 4 Oil

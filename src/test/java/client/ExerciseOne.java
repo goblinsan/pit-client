@@ -2,7 +2,6 @@ package client;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,13 +12,11 @@ import static org.junit.Assert.assertTrue;
 public class ExerciseOne {
     // Test Win Conditions
 
-    private GameConnectionService gameConnectionService;
-    private GameClient testObject;
+    private TraderLogic testObject;
 
     @Before
     public void setUp() {
-        gameConnectionService = Mockito.mock(GameConnectionService.class);
-        testObject = new GameClient("Will", gameConnectionService);
+        testObject = new TraderLogic("Will");
     }
 
     @Test
