@@ -6,9 +6,11 @@ import java.util.Map;
 class GameClient {
 
     private final String name;
+    private GameConnectionService gameConnectionService;
 
-    GameClient(String name) {
+    GameClient(String name, GameConnectionService gameConnectionService) {
         this.name = name;
+        this.gameConnectionService = gameConnectionService;
     }
 
     String joinGame() {
@@ -61,5 +63,9 @@ class GameClient {
             }
         }
         return null;
+    }
+
+    GameConnectionService getGameConnectionService() {
+        return gameConnectionService;
     }
 }
