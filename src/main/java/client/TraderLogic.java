@@ -58,4 +58,8 @@ class TraderLogic {
         }
         return null;
     }
+
+    boolean isThereBetterOffer(Bid bidToAccept, List<Offer> offers) {
+        return bidToAccept == null;
+    }
 }
