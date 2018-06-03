@@ -6,8 +6,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class ExerciseFive {
     // Test choose between accepting bid or making a bid
@@ -23,11 +23,11 @@ public class ExerciseFive {
     public void shouldAcceptAnyBid() {
         Bid bidToAccept = new Bid("anyRequester", "anyOwner", 3, "OIL");
         List<Offer> offers = new ArrayList<>();
-        assertFalse(testObject.isThereBetterOffer(bidToAccept, offers));
+        assertNotNull(testObject.isThereBetterOffer(bidToAccept, offers, null));
     }
 
     @Test
     public void ifNoBidReturnTrueForBetterOffer() {
-        assertTrue(testObject.isThereBetterOffer(null, null));
+        assertNull(testObject.isThereBetterOffer(null, null, null));
     }
 }

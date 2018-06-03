@@ -24,7 +24,7 @@ public class ExerciseOne {
         Map<String, Integer> testHand = new HashMap<>();
         testHand.put("GOLD", 9);
 
-        assertTrue(testObject.cornerMarket(testHand));
+        assertTrue(testObject.canCornerMarket(testHand));
     }
 
     @Test
@@ -33,6 +33,6 @@ public class ExerciseOne {
         testHand.put("GOLD", 5);
         testHand.put("OIL", 4);
 
-        assertFalse(testObject.cornerMarket(testHand));
+        assertFalse(testObject.canCornerMarket(testHand));
     }
 }

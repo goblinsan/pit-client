@@ -4,9 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,9 +24,7 @@ public class ExerciseFour {
         // and select a player offering the same number as your Target Amount
 
         // This is your hand, you want to give Luke your 4 Oil
-        Map<String, Integer> testHand = new HashMap<>();
-        testHand.put("GOLD", 5);
-        testHand.put("OIL", 4);
+        TargetTrade testTrade = new TargetTrade("OIL", 4);
 
         // This is the current list of Offers in the market.
         List<Offer> testOfferList = new ArrayList<>();
@@ -38,11 +34,11 @@ public class ExerciseFour {
 
 
         // Bid format : Requester[you], Owner[other player], amount, Commodity[type you will trade]
-        // The method submitBid should return an Bid equal to this expectedBid object
+        // The method prepareBid should return an Bid equal to this expectedBid object
         Bid expectedBid = new Bid("Will", "Luke", 4, "OIL");
 
         // compare this actualBid to the expectedBid
-        Bid actualBid = testObject.submitBid(testOfferList, testHand);
+        Bid actualBid = testObject.prepareBid(testOfferList, testTrade, null);
 
         // comparisons for test
         assertEquals(expectedBid.getOwner(), actualBid.getOwner());
@@ -53,9 +49,7 @@ public class ExerciseFour {
 
     @Test
     public void acceptBidTest() {
-        Map<String, Integer> testHand = new HashMap<>();
-        testHand.put("GOLD", 5);
-        testHand.put("OIL", 4);
+        TargetTrade testTrade = new TargetTrade("OIL", 4);
 
         List<Bid> testBidList = new ArrayList<>();
         testBidList.add(new Bid("Luke", "Will", 4, "OIL"));
@@ -64,7 +58,7 @@ public class ExerciseFour {
 
         Bid expectedBid = new Bid("Luke", "Will", 4, "OIL");
 
-        Bid actualBid = testObject.acceptBid(testBidList, testHand);
+        Bid actualBid = testObject.choosePreferredBid(testBidList, testTrade);
 
         // comparisons for test
         assertEquals(expectedBid.getOwner(), actualBid.getOwner());

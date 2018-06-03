@@ -1,5 +1,6 @@
 package client;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class GameConnectionServiceTest {
     private GameConnectionService testObject = new GameConnectionService("localhost", "8080", "LUKE", "password");
 

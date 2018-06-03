@@ -8,55 +8,81 @@ public class TraderRunner implements Runnable {
     private GameConnectionService gameConnectionService;
     private TraderState state = TraderState.START;
 
-    TraderRunner(TraderLogic traderLogic, GameConnectionService gameConnectionService) {
+    public TraderRunner(TraderLogic traderLogic, GameConnectionService gameConnectionService) {
         this.traderLogic = traderLogic;
         this.gameConnectionService = gameConnectionService;
     }
 
-    TraderLogic getTraderLogic() {
+    public TraderLogic getTraderLogic() {
         return traderLogic;
     }
 
-    GameConnectionService getGameConnectionService() {
+    public GameConnectionService getGameConnectionService() {
         return gameConnectionService;
     }
 
     TraderState getState() {
         return state;
     }
+    private String name() { return traderLogic.getName(); }
 
     @Override
     public void run() {
-        while (!gameConnectionService.joinGame()) {
+        while (!gameConnectionService.connect()) {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        Offer previousMadeOffer = null;
         String marketState = gameConnectionService.getMarketState();
+        while (!marketState.equals("OPEN")) {
+            marketState = gameConnectionService.getMarketState();
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         while (state != TraderState.WON && marketState.equals("OPEN")) {
             Map<String, Integer> hand = gameConnectionService.getHand();
-            if (traderLogic.cornerMarket(hand)) {
-                state = TraderState.WON;
+            System.out.println(name() + ":Hand: " + hand);
+
+
+            if (traderLogic.canCornerMarket(hand)) {
+                if (gameConnectionService.cornerMarket(hand)) {
+                    traderLogic.incrementWins();
+                    state = TraderState.WON;
+                }
             } else {
                 state = TraderState.TRADING;
-                traderLogic.getTargetTrade(hand);
-                gameConnectionService.submitOffer(traderLogic.submitOffer(hand));
-                List<Bid> bids = gameConnectionService.getBids();
-                Bid acceptedBid = traderLogic.acceptBid(bids, hand);
-                List<Offer> offers = gameConnectionService.getOffers();
-                if (traderLogic.isThereBetterOffer(acceptedBid, offers)) {
-                    Bid submittedBid = traderLogic.submitBid(offers, hand);
-                    gameConnectionService.submitBid(submittedBid);
-                } else {
-                    gameConnectionService.acceptBid(acceptedBid);
-                }
 
-                // TODO: check trades against timestamp
-                gameConnectionService.getTrades();
+                TargetTrade targetTrade = traderLogic.getTargetTrade(hand);
+                System.out.println(name() + ":targetTrade: " + targetTrade.getType() + "/" + targetTrade.getAmount());
+
+                List<Bid> bids = gameConnectionService.getBids();
+                Bid preferredBid = traderLogic.choosePreferredBid(bids, targetTrade);
+
+                List<Offer> offers = gameConnectionService.getOffers();
+                Bid bidToSubmit = traderLogic.isThereBetterOffer(preferredBid, offers, targetTrade);
+                if (bidToSubmit != null) {
+                    gameConnectionService.submitBid(bidToSubmit);
+                } else if (preferredBid != null) {
+                    gameConnectionService.acceptBid(preferredBid);
+                } else {
+//                    if (previousMadeOffer != null) {
+//                        gameConnectionService.removeOffer(previousMadeOffer);
+//                    }
+                    Offer offer = traderLogic.prepareOffer(targetTrade);
+                    previousMadeOffer = offer;
+                    gameConnectionService.submitOffer(offer);
+                }
             }
             marketState = gameConnectionService.getMarketState();
+            if (Thread.interrupted()) {
+                break;
+            }
         }
     }
 }

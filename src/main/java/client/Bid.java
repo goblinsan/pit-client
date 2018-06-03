@@ -29,4 +29,12 @@ class Bid {
     String getCommodityToTrade() {
         return commodityToTrade;
     }
+
+    @Override
+    public String toString() {
+        return requester + ':' +
+                owner + ':' +
+                amount + ':' +
+                commodityToTrade;
+    }
 }
