@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Ignore
-public class GameConnectionServiceTest {
+public class GameConnectionServiceIT {
     private GameConnectionService testObject = new GameConnectionService("localhost", "8080", "LUKE", "password");
 
     @Test

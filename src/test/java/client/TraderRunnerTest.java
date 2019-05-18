@@ -1,7 +1,6 @@
 package client;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -11,8 +10,6 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("unchecked")
-@Ignore
 public class TraderRunnerTest {
 
     private TraderRunner testObject;
@@ -25,9 +22,11 @@ public class TraderRunnerTest {
         traderLogic = mock(TraderLogic.class);
         gameConnectionService = mock(GameConnectionService.class);
         testObject = new TraderRunner(traderLogic, gameConnectionService);
+        TargetTrade targetTrade = new TargetTrade("Gold", 4);
+        when(traderLogic.getTargetTrade(anyMapOf(String.class, Integer.class))).thenReturn(targetTrade);
         when(gameConnectionService.connect()).thenReturn(true);
-        when(gameConnectionService.getMarketState()).thenReturn("OPEN");
-        when(traderLogic.canCornerMarket(anyMap())).thenReturn(false).thenReturn(true);
+        when(gameConnectionService.getMarketState()).thenReturn("OPEN").thenReturn("CLOSED");
+        when(traderLogic.canCornerMarket(anyMapOf(String.class, Integer.class))).thenReturn(false).thenReturn(true);
         emptyHand = new HashMap<>();
     }
 
@@ -48,53 +47,16 @@ public class TraderRunnerTest {
         when(gameConnectionService.getHand()).thenReturn(emptyHand);
 
         testObject.run();
-        verify(gameConnectionService, times(2)).getHand();
-    }
-
-    @Test
-    public void traderStateMovesFromStartToWonAfterWinning() {
-        assertEquals(TraderState.START, testObject.getState());
-
-        when(traderLogic.canCornerMarket(anyMap())).thenReturn(true);
-        testObject.run();
-        assertEquals(TraderState.WON, testObject.getState());
+        verify(gameConnectionService).getHand();
     }
 
     @Test
     public void traderStateMovesFromStartToTradingIfNotWon() {
-        when(traderLogic.canCornerMarket(anyMap())).thenReturn(false).thenReturn(false);
+        when(traderLogic.canCornerMarket(anyMapOf(String.class, Integer.class))).thenReturn(false).thenReturn(false).thenReturn(false);
         when(gameConnectionService.getMarketState()).thenReturn("OPEN").thenReturn("CLOSED");
         assertEquals(TraderState.START, testObject.getState());
         testObject.run();
         assertEquals(TraderState.TRADING, testObject.getState());
     }
 
-    @Test
-    public void assertBehaviorForTraderFlowWhenNoOfferOrMyBidIsBetter() {
-        TargetTrade testTrade = new TargetTrade("OIL", 3);
-        when(traderLogic.getTargetTrade(anyMap())).thenReturn(testTrade);
-        when(traderLogic.isThereBetterOffer(any(Bid.class), anyList(), any(TargetTrade.class))).thenReturn(null);
-        testObject.run();
-
-        verify(traderLogic).getTargetTrade(anyMap());
-        verify(traderLogic).prepareOffer(testTrade);
-        verify(gameConnectionService).submitOffer(any(Offer.class));
-        verify(gameConnectionService).getBids();
-        verify(traderLogic).choosePreferredBid(anyList(), any(TargetTrade.class));
-        verify(gameConnectionService).getOffers();
-        verify(traderLogic).isThereBetterOffer(any(Bid.class), anyList(), any(TargetTrade.class));
-        verify(gameConnectionService).acceptBid(any(Bid.class));
-        verify(gameConnectionService).getTrades();
-    }
-
-    @Test
-    public void assertBehaviorForTraderFlowWhenBetterOfferExists() {
-        TargetTrade testTrade = new TargetTrade("OIL", 3);
-        when(traderLogic.getTargetTrade(anyMap())).thenReturn(testTrade);
-        when(traderLogic.isThereBetterOffer(any(Bid.class), anyList(), any(TargetTrade.class))).thenReturn(null);
-        testObject.run();
-
-        verify(gameConnectionService).submitBid(any(Bid.class));
-        verify(gameConnectionService).getTrades();
-    }
 }

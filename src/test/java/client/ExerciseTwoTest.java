@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExerciseTwo {
+public class ExerciseTwoTest {
     // Test Target Trade Logic
 
     private TraderLogic testObject;

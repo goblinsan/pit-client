@@ -9,7 +9,7 @@ import java.util.Map;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ExerciseOne {
+public class ExerciseOneTest {
     // Test Win Conditions
 
     private TraderLogic testObject;

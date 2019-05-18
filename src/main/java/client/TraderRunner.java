@@ -1,5 +1,6 @@
 package client;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -17,14 +18,17 @@ public class TraderRunner implements Runnable {
         return traderLogic;
     }
 
-    public GameConnectionService getGameConnectionService() {
+    GameConnectionService getGameConnectionService() {
         return gameConnectionService;
     }
 
     TraderState getState() {
         return state;
     }
-    private String name() { return traderLogic.getName(); }
+
+    private String name() {
+        return traderLogic.getName();
+    }
 
     @Override
     public void run() {
@@ -35,53 +39,50 @@ public class TraderRunner implements Runnable {
                 e.printStackTrace();
             }
         }
-        Offer previousMadeOffer = null;
         String marketState = gameConnectionService.getMarketState();
         while (!marketState.equals("OPEN")) {
             marketState = gameConnectionService.getMarketState();
             try {
-                Thread.sleep(1000L);
+                Thread.sleep(100L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        while (state != TraderState.WON && marketState.equals("OPEN")) {
-            Map<String, Integer> hand = gameConnectionService.getHand();
-            System.out.println(name() + ":Hand: " + hand);
+        while (marketState.equals("OPEN")) {
+            try {
+                Map<String, Integer> hand = gameConnectionService.getHand();
+                System.out.println(name() + ":Hand: " + hand);
 
-
-            if (traderLogic.canCornerMarket(hand)) {
-                if (gameConnectionService.cornerMarket(hand)) {
-                    traderLogic.incrementWins();
-                    state = TraderState.WON;
-                }
-            } else {
-                state = TraderState.TRADING;
-
-                TargetTrade targetTrade = traderLogic.getTargetTrade(hand);
-                System.out.println(name() + ":targetTrade: " + targetTrade.getType() + "/" + targetTrade.getAmount());
-
-                List<Bid> bids = gameConnectionService.getBids();
-                Bid preferredBid = traderLogic.choosePreferredBid(bids, targetTrade);
-
-                List<Offer> offers = gameConnectionService.getOffers();
-                Bid bidToSubmit = traderLogic.isThereBetterOffer(preferredBid, offers, targetTrade);
-                if (bidToSubmit != null) {
-                    gameConnectionService.submitBid(bidToSubmit);
-                } else if (preferredBid != null) {
-                    gameConnectionService.acceptBid(preferredBid);
+                if (traderLogic.canCornerMarket(hand)) {
+                    if (gameConnectionService.cornerMarket(hand)) {
+                        traderLogic.incrementWins();
+                        state = TraderState.WON;
+                    }
                 } else {
-//                    if (previousMadeOffer != null) {
-//                        gameConnectionService.removeOffer(previousMadeOffer);
-//                    }
-                    Offer offer = traderLogic.prepareOffer(targetTrade);
-                    previousMadeOffer = offer;
-                    gameConnectionService.submitOffer(offer);
+                    state = TraderState.TRADING;
+
+                    TargetTrade targetTrade = traderLogic.getTargetTrade(hand);
+                    System.out.println(name() + ":targetTrade: " + targetTrade.getType() + "/" + targetTrade.getAmount());
+
+                    List<Bid> bids = gameConnectionService.getBids();
+                    Bid preferredBid = traderLogic.choosePreferredBid(bids, targetTrade);
+
+                    List<Offer> offers = gameConnectionService.getOffers();
+                    Offer betterOffer = traderLogic.getBetterOffer(preferredBid, offers, targetTrade);
+                    if (betterOffer != null) {
+                        Bid bidToSubmit = traderLogic.prepareBid(betterOffer, targetTrade);
+                        gameConnectionService.submitBid(bidToSubmit);
+                    } else if (preferredBid != null) {
+                        gameConnectionService.acceptBid(preferredBid);
+                    } else {
+                        Offer offer = traderLogic.prepareOffer(targetTrade);
+                        gameConnectionService.submitOffer(offer);
+                    }
                 }
-            }
-            marketState = gameConnectionService.getMarketState();
-            if (Thread.interrupted()) {
-                break;
+                marketState = gameConnectionService.getMarketState();
+            } catch (Exception e) {
+                System.err.println(traderLogic.getName() + " got exception at " + LocalDateTime.now());
+                e.printStackTrace();
             }
         }
     }

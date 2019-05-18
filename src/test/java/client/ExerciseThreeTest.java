@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExerciseThree {
+public class ExerciseThreeTest {
     // Test offer logic
 
     private TraderLogic testObject;

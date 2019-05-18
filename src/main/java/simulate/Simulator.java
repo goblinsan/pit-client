@@ -12,17 +12,19 @@ public class Simulator {
 
     public static void main(String [] args) {
 
-        GameConnectionService adminService = new GameConnectionService("localhost", "8080", "admin", "chase123");
+        String host = "localhost";
+        String port = "8080";
+        GameConnectionService adminService = new GameConnectionService(host, port, "admin", "chase123");
         adminService.schedule("start");
 
         List<TraderRunner> traderRunners = new ArrayList<>();
-        traderRunners.add(getTraderRunner("JAMES", "password"));
-        traderRunners.add(getTraderRunner("LUKE", "password"));
-        traderRunners.add(getTraderRunner("MASON", "password"));
-        traderRunners.add(getTraderRunner("DANI", "password"));
-        traderRunners.add(getTraderRunner("WILL", "password"));
-        traderRunners.add(getTraderRunner("OWEN", "password"));
-        traderRunners.add(getTraderRunner("DEBBIE", "password"));
+        traderRunners.add(getTraderRunner("JAMES", "password", host, port));
+        traderRunners.add(getTraderRunner("LUKE", "password", host, port));
+        traderRunners.add(getTraderRunner("MASON", "password", host, port));
+        traderRunners.add(getTraderRunner("DANI", "password", host, port));
+        traderRunners.add(getTraderRunner("WILL", "password", host, port));
+        traderRunners.add(getTraderRunner("OWEN", "password", host, port));
+        traderRunners.add(getTraderRunner("DEBBIE", "password", host, port));
 
         List<Thread> threads = new ArrayList<>();
         for (TraderRunner tr : traderRunners) {
@@ -33,7 +35,7 @@ public class Simulator {
         sleepAndIgnoreInterruptExcp(500L);
         adminService.schedule("open");
 
-        sleepAndIgnoreInterruptExcp(300000L);
+        sleepAndIgnoreInterruptExcp(30000L);
 
         adminService.schedule("close");
         sleepAndIgnoreInterruptExcp(2000L);
@@ -54,9 +56,9 @@ public class Simulator {
         }
     }
 
-    private static TraderRunner getTraderRunner(String username, String pass) {
+    private static TraderRunner getTraderRunner(String username, String pass, String host, String port) {
         TraderLogic traderLogic = new TraderLogic(username);
-        GameConnectionService gameConnectionService = new GameConnectionService("localhost", "8080", username, pass);
+        GameConnectionService gameConnectionService = new GameConnectionService(host, port, username, pass);
         return new TraderRunner(traderLogic, gameConnectionService);
     }
 
