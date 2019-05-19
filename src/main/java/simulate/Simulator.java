@@ -1,7 +1,10 @@
 package simulate;
 
 
-import client.*;
+import client.GameConnectionService;
+import client.SwitchTraderLogic;
+import client.TraderLogic;
+import client.TraderRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +20,10 @@ public class Simulator {
         adminService.schedule("start");
 
         List<TraderRunner> traderRunners = new ArrayList<>();
-        traderRunners.add(getTraderRunner("JAMES", "password", new RandomTraderLogic("JAMES")));
-        traderRunners.add(getTraderRunner("LUKE", "password", new SimpleTraderLogic("LUKE")));
-        traderRunners.add(getTraderRunner("MASON", "password", new SimpleTraderLogic("MASON")));
-        traderRunners.add(getTraderRunner("DANI", "password", new SimpleTraderLogic("DANI")));
+        traderRunners.add(getTraderRunner("JAMES", "password", new SwitchTraderLogic("JAMES")));
+        traderRunners.add(getTraderRunner("LUKE", "password", new SwitchTraderLogic("LUKE")));
+        traderRunners.add(getTraderRunner("MASON", "password", new SwitchTraderLogic("MASON")));
+//        traderRunners.add(getTraderRunner("DANI", "password", new SwitchTraderLogic("DANI")));
 //        traderRunners.add(getTraderRunner("WILL", "password", new SimpleTraderLogic("WILL")));
 //        traderRunners.add(getTraderRunner("OWEN", "password"));
 //        traderRunners.add(getTraderRunner("DEBBIE", "password"));
