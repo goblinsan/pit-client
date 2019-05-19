@@ -26,10 +26,6 @@ public class TraderRunner implements Runnable {
         return state;
     }
 
-    private String name() {
-        return traderLogic.getName();
-    }
-
     @Override
     public void run() {
         while (!gameConnectionService.connect()) {
@@ -51,7 +47,7 @@ public class TraderRunner implements Runnable {
         while (marketState.equals("OPEN")) {
             try {
                 Map<String, Integer> hand = gameConnectionService.getHand();
-                System.out.println(name() + ":Hand: " + hand);
+                System.out.println(traderLogic.getName() + ":Hand: " + hand);
 
                 if (traderLogic.canCornerMarket(hand)) {
                     if (gameConnectionService.cornerMarket(hand)) {
@@ -61,23 +57,18 @@ public class TraderRunner implements Runnable {
                 } else {
                     state = TraderState.TRADING;
 
-                    TargetTrade targetTrade = traderLogic.getTargetTrade(hand);
-                    System.out.println(name() + ":targetTrade: " + targetTrade.getType() + "/" + targetTrade.getAmount());
-
+                    // Get any open bids from the market
                     List<Bid> bids = gameConnectionService.getBids();
-                    Bid preferredBid = traderLogic.choosePreferredBid(bids, targetTrade);
 
+                    // Get any open offers from the market
                     List<Offer> offers = gameConnectionService.getOffers();
-                    Offer betterOffer = traderLogic.getBetterOffer(preferredBid, offers, targetTrade);
-                    if (betterOffer != null) {
-                        Bid bidToSubmit = traderLogic.prepareBid(betterOffer, targetTrade);
-                        gameConnectionService.submitBid(bidToSubmit);
-                    } else if (preferredBid != null) {
-                        gameConnectionService.acceptBid(preferredBid);
-                    } else {
-                        Offer offer = traderLogic.prepareOffer(targetTrade);
-                        gameConnectionService.submitOffer(offer);
-                    }
+
+                    // Choose which action to take based on available bids and offers
+                    TraderAction traderAction = traderLogic.getTraderAction(hand, offers, bids);
+
+                    // Connect and execute action
+                    traderAction.submitActionRequest(traderLogic.getName(), gameConnectionService);
+
                 }
                 marketState = gameConnectionService.getMarketState();
             } catch (Exception e) {

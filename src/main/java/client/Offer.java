@@ -1,6 +1,6 @@
 package client;
 
-class Offer {
+class Offer implements TradeAction {
     private final String name;
     private final int amount;
 
@@ -9,11 +9,11 @@ class Offer {
         this.amount = amount;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    int getAmount() {
+    public int getAmount() {
         return amount;
     }
 

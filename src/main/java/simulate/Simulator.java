@@ -1,30 +1,29 @@
 package simulate;
 
 
-import client.GameConnectionService;
-import client.TraderLogic;
-import client.TraderRunner;
+import client.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Simulator {
 
+    private static String host = "localhost";
+    private static String port = "8080";
+
     public static void main(String [] args) {
 
-        String host = "localhost";
-        String port = "8080";
         GameConnectionService adminService = new GameConnectionService(host, port, "admin", "chase123");
         adminService.schedule("start");
 
         List<TraderRunner> traderRunners = new ArrayList<>();
-        traderRunners.add(getTraderRunner("JAMES", "password", host, port));
-        traderRunners.add(getTraderRunner("LUKE", "password", host, port));
-        traderRunners.add(getTraderRunner("MASON", "password", host, port));
-        traderRunners.add(getTraderRunner("DANI", "password", host, port));
-        traderRunners.add(getTraderRunner("WILL", "password", host, port));
-        traderRunners.add(getTraderRunner("OWEN", "password", host, port));
-        traderRunners.add(getTraderRunner("DEBBIE", "password", host, port));
+        traderRunners.add(getTraderRunner("JAMES", "password", new RandomTraderLogic("JAMES")));
+        traderRunners.add(getTraderRunner("LUKE", "password", new SimpleTraderLogic("LUKE")));
+        traderRunners.add(getTraderRunner("MASON", "password", new SimpleTraderLogic("MASON")));
+        traderRunners.add(getTraderRunner("DANI", "password", new SimpleTraderLogic("DANI")));
+//        traderRunners.add(getTraderRunner("WILL", "password", new SimpleTraderLogic("WILL")));
+//        traderRunners.add(getTraderRunner("OWEN", "password"));
+//        traderRunners.add(getTraderRunner("DEBBIE", "password"));
 
         List<Thread> threads = new ArrayList<>();
         for (TraderRunner tr : traderRunners) {
@@ -42,7 +41,7 @@ public class Simulator {
 
         System.out.println("Results:");
         for (TraderRunner tr : traderRunners) {
-            System.out.println("    wins: " + tr.getTraderLogic().getWins());
+            System.out.println("    wins: " + tr.getTraderLogic().getName() + " : " + tr.getTraderLogic().getWins());
         }
 
 
@@ -56,8 +55,7 @@ public class Simulator {
         }
     }
 
-    private static TraderRunner getTraderRunner(String username, String pass, String host, String port) {
-        TraderLogic traderLogic = new TraderLogic(username);
+    private static TraderRunner getTraderRunner(String username, String pass, TraderLogic traderLogic) {
         GameConnectionService gameConnectionService = new GameConnectionService(host, port, username, pass);
         return new TraderRunner(traderLogic, gameConnectionService);
     }

@@ -3,27 +3,29 @@ package client;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class TraderRunnerTest {
 
     private TraderRunner testObject;
-    private TraderLogic traderLogic;
+    private SimpleTraderLogic traderLogic;
     private GameConnectionService gameConnectionService;
     private Map<String, Integer> emptyHand;
 
     @Before
     public void setUp() {
-        traderLogic = mock(TraderLogic.class);
+        traderLogic = mock(SimpleTraderLogic.class);
         gameConnectionService = mock(GameConnectionService.class);
         testObject = new TraderRunner(traderLogic, gameConnectionService);
         TargetTrade targetTrade = new TargetTrade("Gold", 4);
         when(traderLogic.getTargetTrade(anyMapOf(String.class, Integer.class))).thenReturn(targetTrade);
+        when(traderLogic.getName()).thenReturn("TESTER");
+        when(traderLogic.getTraderAction(anyMap(), anyList(), anyList())).thenReturn(new TraderAction(ActionType.SUBMIT_OFFER, null));
         when(gameConnectionService.connect()).thenReturn(true);
         when(gameConnectionService.getMarketState()).thenReturn("OPEN").thenReturn("CLOSED");
         when(traderLogic.canCornerMarket(anyMapOf(String.class, Integer.class))).thenReturn(false).thenReturn(true);

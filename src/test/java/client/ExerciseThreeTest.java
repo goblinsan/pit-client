@@ -8,11 +8,11 @@ import static org.junit.Assert.assertEquals;
 public class ExerciseThreeTest {
     // Test offer logic
 
-    private TraderLogic testObject;
+    private SimpleTraderLogic testObject;
 
     @Before
     public void setUp() {
-        testObject = new TraderLogic("Will");
+        testObject = new SimpleTraderLogic("Will");
     }
 
     @Test

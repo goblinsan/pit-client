@@ -3,19 +3,18 @@ package client;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 
 public class ExerciseTwoTest {
     // Test Target Trade Logic
 
-    private TraderLogic testObject;
+    private SimpleTraderLogic testObject;
 
     @Before
     public void setUp() {
-        testObject = new TraderLogic("Will");
+        testObject = new SimpleTraderLogic("Will");
     }
 
     @Test

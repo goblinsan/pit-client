@@ -2,7 +2,7 @@ package simulate;
 
 
 import client.GameConnectionService;
-import client.TraderLogic;
+import client.SimpleTraderLogic;
 import client.TraderRunner;
 
 public class SimpleSimulator {
@@ -21,7 +21,7 @@ public class SimpleSimulator {
     }
 
     private static TraderRunner getTraderRunner(String host, String port) {
-        TraderLogic traderLogic = new TraderLogic("JAMES");
+        SimpleTraderLogic traderLogic = new SimpleTraderLogic("JAMES");
         GameConnectionService gameConnectionService = new GameConnectionService(host, port, "JAMES", "password");
         return new TraderRunner(traderLogic, gameConnectionService);
     }

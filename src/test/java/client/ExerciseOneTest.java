@@ -3,20 +3,19 @@ package client;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExerciseOneTest {
     // Test Win Conditions
 
-    private TraderLogic testObject;
+    private SimpleTraderLogic testObject;
 
     @Before
     public void setUp() {
-        testObject = new TraderLogic("Will");
+        testObject = new SimpleTraderLogic("Will");
     }
 
     @Test

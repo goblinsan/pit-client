@@ -3,27 +3,34 @@ package client;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import java.util.*;
 
 public class ExerciseFiveTest {
     // Test choose between accepting bid or making a bid
 
-    private TraderLogic testObject;
+    private SimpleTraderLogic testObject;
 
     @Before
     public void setUp() {
-        testObject = new TraderLogic("Will");
+        testObject = new SimpleTraderLogic("Will");
     }
 
     @Test
     public void shouldAcceptAnyBidWhenThereAreNoOffers() {
-        Bid bidToAccept = new Bid("anyRequester", "anyOwner", 3, "OIL");
+        Bid bidToAccept = new Bid("anyRequester", "Will", 3, "OIL");
         List<Offer> offers = new ArrayList<>();
-        TargetTrade testTrade = new TargetTrade("OIL", 4);
-        assertNotNull(testObject.getBetterOffer(bidToAccept, offers, testTrade));
+        TraderAction expectedAction = new TraderAction(ActionType.ACCEPT_BID, bidToAccept);
+        List<Bid> bids = Collections.singletonList(bidToAccept);
+        Map<String, Integer> hand = new HashMap<>();
+        hand.put("GOLD", 5);
+        hand.put("OIL", 4);
+        TraderAction actualAction = testObject.getTraderAction(hand, offers, bids);
+        assertEquals(expectedAction.getActionType(), actualAction.getActionType());
+        assertEquals(expectedAction.getTradeAction().getOwner(), actualAction.getTradeAction().getOwner());
+        assertEquals(expectedAction.getTradeAction().getAmount(), actualAction.getTradeAction().getAmount());
+        assertEquals(expectedAction.getTradeAction().getCommodityToTrade(), actualAction.getTradeAction().getCommodityToTrade());
     }
 
     @Test

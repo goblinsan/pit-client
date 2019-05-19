@@ -80,12 +80,12 @@ public class GameConnectionService {
         return offers;
     }
 
-    void submitOffer(Offer offer) {
+    void submitOffer(TradeAction offer) {
         UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("http").host(baseHost).port(basePort)
-                .path("/player/offer/{name}/{amount}").buildAndExpand(offer.getName(), offer.getAmount());
+                .path("/player/offer/{name}/{amount}").buildAndExpand(username, offer.getAmount());
         HttpEntity<String> request = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, request, String.class);
-        System.out.println(username + ": Submitted offer name=" + offer.getName() + " amount=" + offer.getAmount() + "  response: " + response.getBody());
+        System.out.println(username + ": Submitted offer name=" + username + " amount=" + offer.getAmount() + "  response: " + response.getBody());
     }
 
     void removeOffer(Offer offer) {
@@ -119,20 +119,19 @@ public class GameConnectionService {
         return bids;
     }
 
-    void submitBid(Bid bid) {
-
+    void submitBid(TradeAction bid) {
         UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("http").host(baseHost).port(basePort)
                 .path("/player/bid/{name}/{ownerName}/{amount}/{commodity}")
-                .buildAndExpand(bid.getRequester(), bid.getOwner(), bid.getAmount(), bid.getCommodityToTrade());
+                .buildAndExpand(username, bid.getOwner(), bid.getAmount(), bid.getCommodityToTrade());
         HttpEntity<String> request = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, request, String.class);
         System.out.println(username + ": Submitted bid: " + bid + "   response was: " + response.getBody());
     }
 
-    void acceptBid(Bid bid) {
+    void acceptBid(TradeAction bid) {
         UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("http").host(baseHost).port(basePort)
                 .path("/player/accept-bid/{name}/{ownerName}/{amount}/{commodity}")
-                .buildAndExpand(bid.getRequester(), bid.getOwner(), bid.getAmount(), bid.getCommodityToTrade());
+                .buildAndExpand(bid.getRequester(), username, bid.getAmount(), bid.getCommodityToTrade());
         HttpEntity<String> request = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(uriComponents.toUriString(), HttpMethod.GET, request, String.class);
         System.out.println(username + ": Accepted bid: " + bid + "   response was: " + response.getBody());
