@@ -1,9 +1,6 @@
 package client;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SwitchTraderLogic extends SimpleTraderLogic {
 
@@ -20,13 +17,7 @@ public class SwitchTraderLogic extends SimpleTraderLogic {
     public TargetTrade getTargetTrade(Map<String, Integer> hand) {
         TargetTrade targetTrade;
         if (isDeadlocked()){
-            int randomEntry = getRandomIntInRange(0, hand.size());
-            List<Map.Entry<String, Integer>> entryList = new ArrayList<>(hand.entrySet());
-            Map.Entry<String, Integer> chosenEntry = entryList.get(randomEntry);
-            int totalHeld = chosenEntry.getValue();
-            int targetValue = totalHeld < 2 ? totalHeld : getRandomIntInRange(1, totalHeld + 1);
-
-            targetTrade = new TargetTrade(chosenEntry.getKey(), targetValue);
+            targetTrade = LogicUtil.getRandomTargetTrade(hand);
         }else if (trySwitchingCommodity(hand)) {
             System.out.println(getName() + " - Switch Round ##################################################################");
             targetTrade = new TargetTrade("initial", 0);
@@ -49,10 +40,6 @@ public class SwitchTraderLogic extends SimpleTraderLogic {
         lastHand = hand;
         compareTrade(targetTrade);
         return targetTrade;
-    }
-
-    private int getRandomIntInRange(int lower, int upper) {
-        return ThreadLocalRandom.current().nextInt(lower, upper);
     }
 
     private void compareTrade(TargetTrade targetTrade) {

@@ -1,5 +1,8 @@
 package client;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 class TargetTrade {
     private final String type;
     private final int amount;
