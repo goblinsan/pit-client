@@ -3,11 +3,12 @@ package client;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import static client.Commodity.GOLD;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class TraderRunnerTest {
@@ -22,7 +23,7 @@ public class TraderRunnerTest {
         traderLogic = mock(SimpleTraderLogic.class);
         gameConnectionService = mock(GameConnectionService.class);
         testObject = new TraderRunner(traderLogic, gameConnectionService);
-        TargetTrade targetTrade = new TargetTrade("Gold", 4);
+        TargetTrade targetTrade = new TargetTrade(GOLD.name(), 4);
         when(traderLogic.getTargetTrade(anyMapOf(String.class, Integer.class))).thenReturn(targetTrade);
         when(traderLogic.getName()).thenReturn("TESTER");
         when(traderLogic.getTraderAction(anyMap(), anyList(), anyList())).thenReturn(new TraderAction(ActionType.SUBMIT_OFFER, null));

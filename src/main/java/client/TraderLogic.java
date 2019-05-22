@@ -15,7 +15,7 @@ public abstract class TraderLogic {
         return name;
     }
 
-    boolean canCornerMarket(Map<String, Integer> hand) {
+    public boolean canCornerMarket(Map<String, Integer> hand) {
         // TODO: Logic for Exercise One
         for (Integer integer : hand.values()) {
             if (integer == 9) {

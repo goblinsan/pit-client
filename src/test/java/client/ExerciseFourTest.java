@@ -3,9 +3,11 @@ package client;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
+
+import static client.Commodity.OIL;
+import static org.junit.Assert.assertEquals;
 
 public class ExerciseFourTest {
     // Test bid logic
@@ -23,7 +25,7 @@ public class ExerciseFourTest {
         // and select a player offering the same number as your Target Amount
 
         // This is your hand, you want to give Luke your 4 Oil
-        TargetTrade testTrade = new TargetTrade("OIL", 4);
+        TargetTrade testTrade = new TargetTrade(OIL.name(), 4);
 
         // This is the current list of Offers in the market.
         List<Offer> testOfferList = new ArrayList<>();
@@ -33,7 +35,7 @@ public class ExerciseFourTest {
 
         // Bid format : Requester[you], Owner[other player], amount, Commodity[type you will trade]
         // The method prepareBid should return an Bid equal to this expectedBid object
-        Bid expectedBid = new Bid("Will", "Luke", 4, "OIL");
+        Bid expectedBid = new Bid("Will", "Luke", 4, OIL.name());
 
         Offer offer = testObject.getBetterOffer(null, testOfferList, testTrade);
         Bid actualBid = testObject.prepareBid(offer, testTrade);
@@ -47,7 +49,7 @@ public class ExerciseFourTest {
 
     @Test
     public void choosePreferredBidFromMultipleBids() {
-        TargetTrade testTrade = new TargetTrade("OIL", 4);
+        TargetTrade testTrade = new TargetTrade(OIL.name(), 4);
 
         List<Bid> testBidList = new ArrayList<>();
         testBidList.add(new Bid("Luke", "Will", 4, null));

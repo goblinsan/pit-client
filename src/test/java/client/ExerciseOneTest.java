@@ -3,10 +3,13 @@ package client;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
+
+import static client.Commodity.GOLD;
+import static client.Commodity.OIL;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ExerciseOneTest {
     // Test Win Conditions
@@ -21,7 +24,7 @@ public class ExerciseOneTest {
     @Test
     public void shouldWin() {
         Map<String, Integer> testHand = new HashMap<>();
-        testHand.put("GOLD", 9);
+        testHand.put(GOLD.name(), 9);
 
         assertTrue(testObject.canCornerMarket(testHand));
     }
@@ -29,8 +32,8 @@ public class ExerciseOneTest {
     @Test
     public void shouldNotWin() {
         Map<String, Integer> testHand = new HashMap<>();
-        testHand.put("GOLD", 5);
-        testHand.put("OIL", 4);
+        testHand.put(GOLD.name(), 5);
+        testHand.put(OIL.name(), 4);
 
         assertFalse(testObject.canCornerMarket(testHand));
     }

@@ -3,9 +3,12 @@ package client;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.*;
+
+import static client.Commodity.GOLD;
+import static client.Commodity.OIL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import java.util.*;
 
 public class ExerciseFiveTest {
     // Test choose between accepting bid or making a bid
@@ -19,13 +22,13 @@ public class ExerciseFiveTest {
 
     @Test
     public void shouldAcceptAnyBidWhenThereAreNoOffers() {
-        Bid bidToAccept = new Bid("anyRequester", "Will", 3, "OIL");
+        Bid bidToAccept = new Bid("anyRequester", "Will", 3, OIL.name());
         List<Offer> offers = new ArrayList<>();
         TraderAction expectedAction = new TraderAction(ActionType.ACCEPT_BID, bidToAccept);
         List<Bid> bids = Collections.singletonList(bidToAccept);
         Map<String, Integer> hand = new HashMap<>();
-        hand.put("GOLD", 5);
-        hand.put("OIL", 4);
+        hand.put(GOLD.name(), 5);
+        hand.put(OIL.name(), 4);
         TraderAction actualAction = testObject.getTraderAction(hand, offers, bids);
         assertEquals(expectedAction.getActionType(), actualAction.getActionType());
         assertEquals(expectedAction.getTradeAction().getOwner(), actualAction.getTradeAction().getOwner());
@@ -40,7 +43,7 @@ public class ExerciseFiveTest {
 
     @Test
     public void testBidAndOffersSelectBestOffer() {
-        TargetTrade testTrade = new TargetTrade("OIL", 4);
+        TargetTrade testTrade = new TargetTrade(OIL.name(), 4);
 
         // This is the current list of Offers in the market.
         List<Offer> testOfferList =  new ArrayList<>();
@@ -48,7 +51,7 @@ public class ExerciseFiveTest {
         testOfferList.add(new Offer("Luke", 4));
         testOfferList.add(new Offer("Mason", 2));
 
-        Bid preferredBid = new Bid("SAM", "JAMES", 1, "GOLD");
+        Bid preferredBid = new Bid("SAM", "JAMES", 1, GOLD.name());
 
         Offer expectedOffer = new Offer("Luke", 4);
         Offer actualOffer = testObject.getBetterOffer(preferredBid, testOfferList, testTrade);
@@ -59,8 +62,8 @@ public class ExerciseFiveTest {
 
     @Test
     public void testBidAndOffersPreferBid() {
-        TargetTrade testTrade = new TargetTrade("OIL", 4);
-        Bid preferredBid = new Bid("SAM", "JAMES", 4, "GOLD");
+        TargetTrade testTrade = new TargetTrade(OIL.name(), 4);
+        Bid preferredBid = new Bid("SAM", "JAMES", 4, GOLD.name());
 
         // This is the current list of Offers in the market.
         List<Offer> testOfferList =  new ArrayList<>();
