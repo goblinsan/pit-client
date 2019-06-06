@@ -86,7 +86,7 @@ Feature: Simple Trader
 
 #  Step 5 - The last step is to decide what to do.
 #  If there are no acceptable bids or offers in the market, just submit an offer for your target trade.
-#  There are no bids, or if there is better offer available then submit a bid for that offer.
+#  If there are no bids, or if there is better offer available then submit a bid for that offer.
 #  If there is an acceptable bid and no better offers, then accept the bid to complete the trade.
 
   Scenario: no bids or offers
