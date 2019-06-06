@@ -1,6 +1,6 @@
 package client;
 
-class Bid implements TradeAction {
+public class Bid implements TradeAction {
     private final String requester;
     private final String owner;
     private final int amount;

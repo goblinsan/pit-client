@@ -3,7 +3,7 @@ package client;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-class TargetTrade {
+public class TargetTrade {
     private final String type;
     private final int amount;
 
@@ -12,11 +12,11 @@ class TargetTrade {
         this.amount = amount;
     }
 
-    String getType() {
+    public String getType() {
         return type;
     }
 
-    int getAmount() {
+    public int getAmount() {
         return amount;
     }
 }

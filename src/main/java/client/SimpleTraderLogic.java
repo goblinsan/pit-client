@@ -44,7 +44,7 @@ public class SimpleTraderLogic extends TraderLogic {
     }
 
     @Override
-    TraderAction getTraderAction(Map<String, Integer> hand, List<Offer> offers, List<Bid> bids) {
+    public TraderAction getTraderAction(Map<String, Integer> hand, List<Offer> offers, List<Bid> bids) {
         // Decide what you want to offer to the market
         TargetTrade targetTrade = getTargetTrade(hand);
         System.out.println(getName() + ":targetTrade: " + targetTrade.getType() + "/" + targetTrade.getAmount());
@@ -64,7 +64,7 @@ public class SimpleTraderLogic extends TraderLogic {
 
     }
 
-    Offer getBetterOffer(Bid preferredBid, List<Offer> offers, TargetTrade targetTrade) {
+    public Offer getBetterOffer(Bid preferredBid, List<Offer> offers, TargetTrade targetTrade) {
         // TODO: Logic for Exercise Four and Five
         if (preferredBid != null && preferredBid.getAmount() == targetTrade.getAmount()) {
             return null;
@@ -73,7 +73,7 @@ public class SimpleTraderLogic extends TraderLogic {
         return selectBetterOffer(offers, targetTrade, preferredBid);
     }
 
-    private Offer selectBetterOffer(List<Offer> offers, TargetTrade targetTrade, Bid preferredBid){
+    Offer selectBetterOffer(List<Offer> offers, TargetTrade targetTrade, Bid preferredBid){
         int minOfferToBeatBid = 1;
         if (preferredBid != null){
             minOfferToBeatBid = preferredBid.getAmount() + 1;

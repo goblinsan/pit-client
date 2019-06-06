@@ -1,6 +1,6 @@
 package client;
 
-class Offer implements TradeAction {
+public class Offer implements TradeAction {
     private final String name;
     private final int amount;
 
