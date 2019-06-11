@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-class LogicUtil {
+public class LogicUtil {
 
-    static TargetTrade getRandomTargetTrade(Map<String, Integer> hand){
+    public static TargetTrade getRandomTargetTrade(Map<String, Integer> hand){
         List<Map.Entry<String, Integer>>  nonEmptyEntries = hand.entrySet().stream()
                 .filter(stringIntegerEntry -> stringIntegerEntry.getValue() > 0)
                 .collect(Collectors.toList());
