@@ -5,9 +5,10 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class LogicUtil {
+public enum RandomTrade implements Randomize {
+    INSTANCE;
 
-    public static TargetTrade getRandomTargetTrade(Map<String, Integer> hand){
+    public TargetTrade getRandomTargetTrade(Map<String, Integer> hand){
         List<Map.Entry<String, Integer>>  nonEmptyEntries = hand.entrySet().stream()
                 .filter(stringIntegerEntry -> stringIntegerEntry.getValue() > 0)
                 .collect(Collectors.toList());
@@ -18,7 +19,7 @@ public class LogicUtil {
         return new TargetTrade(chosenEntry.getKey(), targetValue);
     }
 
-    private static int getRandomIntInRange(int lower, int upper) {
+    private int getRandomIntInRange(int lower, int upper) {
         return ThreadLocalRandom.current().nextInt(lower, upper);
     }
 }

@@ -1,5 +1,6 @@
 package features;
 
+import client.RandomTrade;
 import client.TargetTrade;
 import cucumber.api.DataTable;
 import cucumber.api.java.Before;
@@ -13,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 import static client.Commodity.*;
-import static client.LogicUtil.getRandomTargetTrade;
 import static org.junit.Assert.assertTrue;
 
 public class RandomTradeSteps {
 
     private Map<String, Integer> hand;
     private Map<TargetTrade, Integer> targetTradeProfile;
+    private RandomTrade randomTrade;
 
     @Before
     public void setup() {
@@ -34,6 +35,7 @@ public class RandomTradeSteps {
         targetTradeProfile.put(new TargetTrade(RICE.name(), 1), 0);
         targetTradeProfile.put(new TargetTrade(RICE.name(), 2), 0);
         targetTradeProfile.put(new TargetTrade(RICE.name(), 3), 0);
+        randomTrade = RandomTrade.INSTANCE;
     }
 
     @Given("^the trader has a hand consisting of \"([^\"]*)\" rice \"([^\"]*)\" oil and \"([^\"]*)\" gold$")
@@ -46,7 +48,7 @@ public class RandomTradeSteps {
     @When("^the random trade utility is run \"([^\"]*)\" times$")
     public void theRandomTradeUtilityIsRunTimes(int iterations) {
         for (int i = 0; i < iterations; i++) {
-            TargetTrade targetTrade = getRandomTargetTrade(hand);
+            TargetTrade targetTrade = randomTrade.getRandomTargetTrade(hand);
             int currentCount = targetTradeProfile.get(targetTrade);
             targetTradeProfile.put(targetTrade, currentCount + 1);
         }

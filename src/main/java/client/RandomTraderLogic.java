@@ -4,12 +4,15 @@ import java.util.Map;
 
 public class RandomTraderLogic extends SimpleTraderLogic {
 
-    public RandomTraderLogic(String name) {
+    private final RandomTrade randomTrade;
+
+    public RandomTraderLogic(String name, RandomTrade randomTrade) {
         super(name);
+        this.randomTrade = randomTrade;
     }
 
     public TargetTrade getTargetTrade(Map<String, Integer> hand) {
-        return LogicUtil.getRandomTargetTrade(hand);
+        return randomTrade.getRandomTargetTrade(hand);
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 import static client.Commodity.*;
 import static org.junit.Assert.assertTrue;
 
-public class LogicUtilTest {
+public class RandomTradeTest {
 
     @Test
     public void getRandomTargetTrade() {
@@ -30,7 +30,7 @@ public class LogicUtilTest {
 
         int testRuns = 10000;
         for (int i = 0; i < testRuns; i++) {
-            TargetTrade targetTrade = LogicUtil.getRandomTargetTrade(testHand);
+            TargetTrade targetTrade = RandomTrade.INSTANCE.getRandomTargetTrade(testHand);
             int currentCount = targetTradeProfile.get(targetTrade);
             targetTradeProfile.put(targetTrade, currentCount + 1);
         }

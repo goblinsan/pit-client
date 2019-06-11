@@ -4,21 +4,26 @@ import java.util.Map;
 
 public class SwitchTraderLogic extends SimpleTraderLogic {
 
-    private int lastSwitch;
-    private int rounds = 1;
-    private Map<String, Integer> lastHand = null;
-    private TargetTrade lastTradeAttempt = null;
-    private int consecutiveTradeAmountAttempts = 0;
+    static final int MAX_SWITCH = 15;
+    static final int MAX_CONSECUTIVE = 6;
+    private final TraderHistory traderHistory;
+    private final Randomize randomTrade;
+
+    public SwitchTraderLogic(String name, TraderHistory traderHistory, Randomize randomTrade) {
+        super(name);
+        this.traderHistory = traderHistory;
+        this.randomTrade = randomTrade;
+    }
 
     public SwitchTraderLogic(String name) {
-        super(name);
+        this(name, new TraderHistory(), RandomTrade.INSTANCE);
     }
 
     public TargetTrade getTargetTrade(Map<String, Integer> hand) {
         TargetTrade targetTrade;
-        if (isDeadlocked()){
-            targetTrade = LogicUtil.getRandomTargetTrade(hand);
-        }else if (trySwitchingCommodity(hand)) {
+        if (isDeadlocked()) {
+            targetTrade = randomTrade.getRandomTargetTrade(hand);
+        } else if (trySwitchingCommodity(hand)) {
             System.out.println(getName() + " - Switch Round ##################################################################");
             targetTrade = new TargetTrade("initial", 0);
             for (Map.Entry<String, Integer> entry : hand.entrySet()) {
@@ -36,40 +41,36 @@ public class SwitchTraderLogic extends SimpleTraderLogic {
             }
         }
 
-        rounds++;
-        lastHand = hand;
+        traderHistory.incrementRounds();
+        traderHistory.setLastHand(hand);
         compareTrade(targetTrade);
         return targetTrade;
     }
 
     private void compareTrade(TargetTrade targetTrade) {
-        if (lastTradeAttempt != null){
-            if (lastTradeAttempt.getAmount() == targetTrade.getAmount()){
-                consecutiveTradeAmountAttempts++;
+        if (traderHistory.getLastTradeAttempt() != null) {
+            if (traderHistory.getLastTradeAttempt().getAmount() == targetTrade.getAmount()) {
+                traderHistory.incremetTradeAttempts();
             } else {
-                consecutiveTradeAmountAttempts = 0;
+                traderHistory.setConsecutiveTradeAmountAttempts(0);
             }
         }
-        lastTradeAttempt = targetTrade;
+        traderHistory.setLastTradeAttempt(targetTrade);
     }
 
     private boolean trySwitchingCommodity(Map<String, Integer> hand) {
-        boolean foolishConsistency = rounds >= lastSwitch + 15;
-        boolean sameHand = lastHand != null && lastHand.equals(hand);
+        boolean foolishConsistency = traderHistory.getRounds() >= traderHistory.getLastSwitch() + MAX_SWITCH;
+        boolean sameHand = traderHistory.getLastHand() != null && traderHistory.getLastHand().equals(hand);
         if (foolishConsistency && sameHand) {
             return true;
         } else if (foolishConsistency) {
-            lastSwitch = rounds;
+            traderHistory.setLastSwitch(traderHistory.getRounds());
         }
         return false;
     }
 
     private boolean isDeadlocked() {
-        if(consecutiveTradeAmountAttempts > 6) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Deadlock !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            return true;
-        }
-        return false;
+        return traderHistory.getConsecutiveTradeAmountAttempts() > MAX_CONSECUTIVE;
     }
 
 }
