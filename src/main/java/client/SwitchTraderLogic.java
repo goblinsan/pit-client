@@ -24,7 +24,6 @@ public class SwitchTraderLogic extends SimpleTraderLogic {
         if (isDeadlocked()) {
             targetTrade = randomTrade.getRandomTargetTrade(hand);
         } else if (trySwitchingCommodity(hand)) {
-            System.out.println(getName() + " - Switch Round ##################################################################");
             targetTrade = new TargetTrade("initial", 0);
             for (Map.Entry<String, Integer> entry : hand.entrySet()) {
                 if (entry.getValue() < 10 && entry.getValue() > targetTrade.getAmount()) {
