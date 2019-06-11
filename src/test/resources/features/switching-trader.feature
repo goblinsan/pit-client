@@ -10,7 +10,7 @@ Feature: Switching Trader
 
 #  Step 1 - Is the market deadlocked?
 
-  Scenario: Deadlock
+  Scenario: Deadlock Detected
     Given the amount of consecutiveTradeAmountAttempts is "7"
     And the trader's hand is "3" rice "3" oil and "3" gold
     When the trader gets the next target trade
