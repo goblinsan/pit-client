@@ -25,19 +25,25 @@ public abstract class TraderLogic {
         return false;
     }
 
+    public int getWins() {
+        return wins;
+    }
+
     abstract TargetTrade getTargetTrade(Map<String, Integer> hand);
-    abstract Offer prepareOffer(TargetTrade targetTrade);
-    abstract Bid prepareBid(Offer offer, TargetTrade targetTrade);
     abstract Bid choosePreferredBid(List<Bid> bidList, TargetTrade targetTrade);
     abstract TraderAction getTraderAction(Map<String, Integer> hand, List<Offer> offers, List<Bid> bids);
+
+    Offer prepareOffer(TargetTrade targetTrade){
+        return new Offer(getName(), targetTrade.getAmount());
+    }
+
+    Bid prepareBid(Offer offer, TargetTrade targetTrade){
+        return new Bid(getName(), offer.getName(), offer.getAmount(), targetTrade.getType());
+    }
 
     void incrementWins() {
         System.out.println("\n\n       " + name + " wins!!");
         wins++;
-    }
-
-    public int getWins() {
-        return wins;
     }
 
 }

@@ -25,8 +25,10 @@ public class TraderRunnerTest {
         testObject = new TraderRunner(traderLogic, gameConnectionService);
         TargetTrade targetTrade = new TargetTrade(GOLD.name(), 4);
         when(traderLogic.getTargetTrade(anyMapOf(String.class, Integer.class))).thenReturn(targetTrade);
-        when(traderLogic.getName()).thenReturn("TESTER");
-        when(traderLogic.getTraderAction(anyMap(), anyList(), anyList())).thenReturn(new TraderAction(ActionType.SUBMIT_OFFER, null));
+        String tester = "TESTER";
+        when(traderLogic.getName()).thenReturn(tester);
+        TraderAction traderAction = new TraderAction(ActionType.SUBMIT_BID, new Offer(tester, 4));
+        when(traderLogic.getTraderAction(anyMap(), anyList(), anyList())).thenReturn(traderAction);
         when(gameConnectionService.connect()).thenReturn(true);
         when(gameConnectionService.getMarketState()).thenReturn("OPEN").thenReturn("CLOSED");
         when(traderLogic.canCornerMarket(anyMapOf(String.class, Integer.class))).thenReturn(false).thenReturn(true);

@@ -22,32 +22,52 @@ public class SimpleTraderLogic extends TraderLogic {
         return returnValue;
     }
 
-    public Offer prepareOffer(TargetTrade targetTrade) {
-        // TODO: Logic for Exercise Three
-        return new Offer(getName(), targetTrade.getAmount());
-    }
-
-    public Bid prepareBid(Offer offer, TargetTrade targetTrade) {
-        return new Bid(getName(), offer.getName(), offer.getAmount(), targetTrade.getType());
-    }
-
     public Bid choosePreferredBid(List<Bid> bidList, TargetTrade targetTrade) {
-        for (Bid bid : bidList) {
-            // TODO: Logic for Exercise Four
-            if ((bid.getAmount() <= targetTrade.getAmount()) && (bid.getOwner().equalsIgnoreCase(getName()))) {
-                Bid selectedBid = new Bid(bid.getRequester(), getName(), bid.getAmount(), targetTrade.getType());
-                System.out.println(getName() + ": selected bid: " + selectedBid);
-                return selectedBid;
+        if (bidList != null){
+            for (Bid bid : bidList) {
+                // TODO: Logic for Exercise Three
+                if ((bid.getAmount() <= targetTrade.getAmount()) && (bid.getOwner().equalsIgnoreCase(getName()))) {
+                    Bid selectedBid = new Bid(bid.getRequester(), getName(), bid.getAmount(), targetTrade.getType());
+                    System.out.println(getName() + ": selected bid: " + selectedBid);
+                    return selectedBid;
+                }
             }
         }
         return null;
+    }
+
+    public Offer getBetterOffer(Bid preferredBid, List<Offer> offers, TargetTrade targetTrade) {
+        // TODO: Logic for Exercise Four
+        if (preferredBid != null && preferredBid.getAmount() == targetTrade.getAmount()) {
+            return null;
+        }
+
+        return selectBetterOffer(offers, targetTrade, preferredBid);
+    }
+
+    Offer selectBetterOffer(List<Offer> offers, TargetTrade targetTrade, Bid preferredBid){
+        int minOfferToBeatBid = 1;
+        if (preferredBid != null){
+            minOfferToBeatBid = preferredBid.getAmount();
+        }
+        Offer preferredOffer = null;
+        if (offers != null) {
+            for (Offer offer : offers) {
+                // TODO: Logic for Exercise Five
+                if (offer.getAmount() <= targetTrade.getAmount() && offer.getAmount() > minOfferToBeatBid){
+                    preferredOffer = offer;
+                    minOfferToBeatBid = offer.getAmount();
+                }
+            }
+        }
+        return preferredOffer;
     }
 
     @Override
     public TraderAction getTraderAction(Map<String, Integer> hand, List<Offer> offers, List<Bid> bids) {
         // Decide what you want to offer to the market
         TargetTrade targetTrade = getTargetTrade(hand);
-        System.out.println(getName() + ":targetTrade: " + targetTrade.getType() + "/" + targetTrade.getAmount());
+        System.out.println(getName() + ": targetTrade: " + targetTrade.getType() + "/" + targetTrade.getAmount());
 
         // Select the best bid for any of our outstanding offers
         Bid preferredBid = choosePreferredBid(bids, targetTrade);
@@ -62,32 +82,6 @@ public class SimpleTraderLogic extends TraderLogic {
             return new TraderAction(ActionType.SUBMIT_OFFER, prepareOffer(targetTrade));
         }
 
-    }
-
-    public Offer getBetterOffer(Bid preferredBid, List<Offer> offers, TargetTrade targetTrade) {
-        // TODO: Logic for Exercise Four and Five
-        if (preferredBid != null && preferredBid.getAmount() == targetTrade.getAmount()) {
-            return null;
-        }
-
-        return selectBetterOffer(offers, targetTrade, preferredBid);
-    }
-
-    Offer selectBetterOffer(List<Offer> offers, TargetTrade targetTrade, Bid preferredBid){
-        int minOfferToBeatBid = 1;
-        if (preferredBid != null){
-            minOfferToBeatBid = preferredBid.getAmount() + 1;
-        }
-        Offer preferredOffer = null;
-        if (offers != null) {
-            for (Offer offer : offers) {
-                if (offer.getAmount() <= targetTrade.getAmount() && offer.getAmount() >= minOfferToBeatBid){
-                    preferredOffer = offer;
-                    minOfferToBeatBid = offer.getAmount() + 1;
-                }
-            }
-        }
-        return preferredOffer;
     }
 
 }
